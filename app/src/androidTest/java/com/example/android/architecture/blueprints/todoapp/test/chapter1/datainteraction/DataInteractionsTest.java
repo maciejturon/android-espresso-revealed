@@ -14,6 +14,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.PreferenceMatchers.withKey;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -53,5 +54,37 @@ public class DataInteractionsTest extends BaseTest {
                 .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
                 .onChildView(withId(android.R.id.summary))
                 .check(matches(withText("sample@ema.il")));
+    }
+
+    // Exercise 3.1
+    @Test
+    public void enableNotificationsAndCheckIfOptionsVisible() {
+        openDrawer();
+        onView(allOf(withId(R.id.design_menu_item_text), withText("Settings"))).perform(click());
+        onData(instanceOf(PreferenceActivity.Header.class))
+                .inAdapterView(withId(android.R.id.list))
+                .atPosition(1)
+                .onChildView(withId(android.R.id.title))
+                .check(matches(withText("Notifications")))
+                .perform(click());
+        onData(withKey("notifications_new_message"))
+                .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
+                .onChildView(withId(android.R.id.title))
+                .check(matches(withText("Enable notifications")))
+                .perform(click());
+        //Exercise 3.2
+        onData(withKey("notifications_slider"))
+                .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
+                .onChildView(withId(android.R.id.widget_frame))
+                .check(matches(isEnabled()));
+        onData(withKey("notifications_slider"))
+                .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
+                .check(matches(isDisplayed()));
+        onData(withKey("notifications_new_message_ringtone"))
+                .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
+                .check(matches(isDisplayed()));
+        onData(withKey("notifications_new_message_vibrate"))
+                .inAdapterView(allOf(withId(android.R.id.list), withParent(withId(android.R.id.list_container))))
+                .check(matches(isDisplayed()));
     }
 }
