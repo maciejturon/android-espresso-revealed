@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.android.architecture.blueprints.todoapp.test.chapter2.customactions.CustomClickAction.clickElementWithVisibility;
+import static com.example.android.architecture.blueprints.todoapp.test.chapter2.customactions.CustomRecyclerViewActions.AssertNotInTheListTodoWithTitle.assertNotInTheListTodoWithTitle;
 import static com.example.android.architecture.blueprints.todoapp.test.chapter2.customactions.CustomRecyclerViewActions.ClickTodoCheckBoxWithTitleViewAction.clickTodoCheckBoxWithTitle;
 import static com.example.android.architecture.blueprints.todoapp.test.chapter4.conditionwatchers.ConditionWatchers.waitForElement;
 import static com.example.android.architecture.blueprints.todoapp.test.chapter4.conditionwatchers.ConditionWatchers.waitForElementIsGone;
@@ -112,4 +113,12 @@ public class RecyclerViewActionsTest extends BaseTest {
         onView(toToList)
                 .perform(customSwipeActions.swipeCustom(100, GeneralLocation.CENTER, GeneralLocation.BOTTOM_CENTER));
     }
+
+    /** Exercise 7 */
+    @Test
+    public void checkIfItemIsNotInTheList() throws Exception {
+        generateToDos(2);
+        onView(toToList).perform(assertNotInTheListTodoWithTitle("item 3"));
+    }
+
 }
