@@ -39,7 +39,7 @@ public class RecyclerViewActionsTest extends BaseTest {
 
     private ViewInteraction todoSavedSnackbar = onView(withText(R.string.successfully_saved_task_message));
     private CustomSwipeActions customSwipeActions = new CustomSwipeActions();
-    private Matcher toToList = allOf(
+    private Matcher todoList = allOf(
             withId(R.id.tasks_list),
             isDisplayed());
 
@@ -103,14 +103,14 @@ public class RecyclerViewActionsTest extends BaseTest {
     @Test
     public void refreshToDoListByDefaultAction() throws Exception {
         generateToDos(2);
-        onView(toToList).perform(swipeDown());
+        onView(todoList).perform(swipeDown());
     }
 
     /** Exercise 6.2 */
     @Test
     public void refreshToDoListByCustomAction() throws Exception {
         generateToDos(2);
-        onView(toToList)
+        onView(todoList)
                 .perform(customSwipeActions.swipeCustom(100, GeneralLocation.CENTER, GeneralLocation.BOTTOM_CENTER));
     }
 
@@ -118,7 +118,7 @@ public class RecyclerViewActionsTest extends BaseTest {
     @Test
     public void checkIfItemIsNotInTheList() throws Exception {
         generateToDos(2);
-        onView(toToList).perform(assertNotInTheListTodoWithTitle("item 3"));
+        onView(todoList).perform(assertNotInTheListTodoWithTitle("item 3"));
     }
 
 }
