@@ -1,10 +1,12 @@
 package com.example.android.architecture.blueprints.todoapp.test.chapter3.testsamples
 
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.matcher.ViewMatchers.*
 import com.example.android.architecture.blueprints.todoapp.R.id.*
 import com.example.android.architecture.blueprints.todoapp.test.BaseTest
 import com.example.android.architecture.blueprints.todoapp.test.chapter1.data.TestData
+import com.example.android.architecture.blueprints.todoapp.test.chapter2.custommatchers.RecyclerViewMatchers.withTitle
 import com.example.android.architecture.blueprints.todoapp.test.chapter3.*
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
@@ -21,12 +23,14 @@ class ViewActionsKotlinDslTest : BaseTest() {
 
     // ViewInteractions used in tests
     private val addFab = viewWithId(fab_add_task)
+    private val editFab = viewWithId(fab_edit_task)
     private val taskTitleField = viewWithId(add_task_title)
     private val taskDescriptionField = viewWithId(add_task_description)
     private val editDoneFab = viewWithId(fab_edit_task_done)
     private val todoCheckbox = viewWithId(todo_complete)
     private val toolbarFilter = viewWithId(menu_filter)
     private val todoTitle = viewWithId(todo_title)
+    private val todoList = viewWithId(tasks_list)
     private val activeFilterOption = onView(allOf(withId(title), withText("Active")))
     private val completedFilterOption = onView(allOf(withId(title), withText("Completed")))
     private val snackbar = viewWithId(snackbar_text)
@@ -77,5 +81,22 @@ class ViewActionsKotlinDslTest : BaseTest() {
         snackbar.waitForGone()
         // verifying new TO-DO with title is shown in the TO-DO list
         viewWithText(toDoTitle).checkDisplayed()
+    }
+
+    @Test
+    fun editsToDo() {
+        val editedToDoTitle = "Edited $toDoTitle"
+        val editedToDoDescription = "Edited $toDoDescription"
+
+        // add new TO-DO
+        addsNewToDoWithWaiterDsl()
+        // edit TO-DO
+        todoList.actionOnItem(withTitle(toDoTitle), click())
+        editFab.click()
+        taskTitleField.replace(editedToDoTitle).closeKeyboard()
+        taskDescriptionField.replace(editedToDoDescription).closeKeyboard()
+        editDoneFab.click()
+        // verify edited TO-DO is shown
+        viewWithText(editedToDoTitle).checkDisplayed()
     }
 }
